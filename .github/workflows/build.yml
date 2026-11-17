@@ -1,0 +1,48 @@
+name: Build
+
+on:
+  push:
+    paths-ignore:
+      - '**/*.md'
+  pull_request:
+    paths-ignore:
+      - '**/*.md'
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Java 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '9.2.1'
+      - name: Generate missing wrapper jar
+        run: gradle wrapper --gradle-version 9.2.1 --distribution-type bin
+      - name: Build
+        run: ./gradlew build
+      - name: Commit Gradle wrapper if missing
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        run: |
+          if [ -n "$(git status --porcelain -- gradle/wrapper/gradle-wrapper.jar)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add gradle/wrapper/gradle-wrapper.jar
+            git commit -m "Add Gradle wrapper jar"
+            git push
+          fi
+      - name: Upload mod jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: Ad-Astra-EMI-Compat-1.21.1
+          path: build/libs/*.jar
+          if-no-files-found: error
+          retention-days: 1

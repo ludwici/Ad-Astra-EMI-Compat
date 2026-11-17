@@ -1,0 +1,10 @@
+{
+  "emi.category.ad_astra.nasa_workbench": "NASA Workbench",
+  "emi.category.ad_astra.compressing": "Compressor",
+  "emi.category.ad_astra.alloying": "Etrionic Blast Furnace",
+  "emi.category.ad_astra.cryo_freezing": "Cryo Freezer",
+  "emi.category.ad_astra.oxygen_loading": "Oxygen Loader",
+  "emi.category.ad_astra.refining": "Fuel Refinery",
+  "emi.adastraemicompat.time": "Time: %s ticks",
+  "emi.adastraemicompat.energy": "Energy: %s FE/t"
+}

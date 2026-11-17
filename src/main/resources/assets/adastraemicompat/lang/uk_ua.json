@@ -1,0 +1,10 @@
+{
+  "emi.category.ad_astra.nasa_workbench": "Верстак NASA",
+  "emi.category.ad_astra.compressing": "Компресор",
+  "emi.category.ad_astra.alloying": "Етріонова доменна піч",
+  "emi.category.ad_astra.cryo_freezing": "Кріогенна установка",
+  "emi.category.ad_astra.oxygen_loading": "Завантажувач кисню",
+  "emi.category.ad_astra.refining": "Нафтопереробна установка",
+  "emi.adastraemicompat.time": "Час: %s тиків",
+  "emi.adastraemicompat.energy": "Енергія: %s FE/тик"
+}
