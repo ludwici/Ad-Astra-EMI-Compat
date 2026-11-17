@@ -7,6 +7,8 @@ modId="${mod_id}"
 version="${mod_version}"
 displayName="${mod_name}"
 authors="ludwici"
+logoFile="icon.png"
+logoBlur=false
 description='''
 Adds native EMI recipes for Ad Astra's machines and NASA Workbench.
 '''
