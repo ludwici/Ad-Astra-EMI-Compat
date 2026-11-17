@@ -96,7 +96,7 @@ neoForge.ideSyncTask generateModMetadata
 
 tasks.named('jar', Jar).configure {
     from('LICENSE') {
-        rename { "LICENSE_${mod_id}" }
+        rename { "LICENSE_${project.mod_id}" }
     }
     from('THIRD_PARTY_NOTICES.md')
 }
