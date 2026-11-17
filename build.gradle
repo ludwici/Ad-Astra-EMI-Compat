@@ -24,6 +24,13 @@ repositories {
         url = 'https://maven.teamresourceful.com/repository/maven-public/'
     }
     maven {
+        name = 'Modrinth'
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
+    maven {
         name = 'Terraformers'
         url = 'https://maven.terraformersmc.com/releases/'
     }
@@ -56,10 +63,16 @@ configurations {
 
 dependencies {
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    compileOnly "earth.terrarium.adastra:ad_astra-neoforge-${minecraft_version}:${ad_astra_version}"
+    compileOnly "maven.modrinth:3ufwT9JF:9pnKHdCG"
+    compileOnly "com.teamresourceful.resourcefullib:resourcefullib-neoforge-1.21:3.0.12"
+    compileOnly "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-1.21:3.0.11"
+    compileOnly "earth.terrarium.common_storage_lib:common-storage-lib-neoforge-1.21.1:0.0.10"
 
     localRuntime "dev.emi:emi-neoforge:${emi_version}"
-    localRuntime "earth.terrarium.adastra:ad_astra-neoforge-${minecraft_version}:${ad_astra_version}"
+    localRuntime "maven.modrinth:3ufwT9JF:9pnKHdCG"
+    localRuntime "com.teamresourceful.resourcefullib:resourcefullib-neoforge-1.21:3.0.12"
+    localRuntime "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-1.21:3.0.11"
+    localRuntime "earth.terrarium.common_storage_lib:common-storage-lib-neoforge-1.21.1:0.0.10"
 }
 
 var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
