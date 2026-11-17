@@ -15,7 +15,7 @@ Recipes are taken from the active world's recipe manager, including recipes adde
 
 ## Requirements
 
-- Minecraft 1.21.1 / NeoForge 21.1.267 or newer compatible 21.1.x
+- Minecraft 1.21.1 / NeoForge 21.1.28 or newer compatible 21.1.x
 - Ad Astra 1.16.26 or newer compatible 1.21.1 release
 - EMI 1.1.24 or newer compatible 1.21.1 release
 
