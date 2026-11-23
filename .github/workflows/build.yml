@@ -27,6 +27,13 @@ jobs:
           gradle-version: '8.8'
       - name: Build
         run: ./gradlew build --no-daemon
+      - name: Verify mod jar resources and filename
+        run: |
+          JAR="build/libs/adastraemicompat-forge-1.20.1-1.0.0.jar"
+          test -f "$JAR"
+          jar tf "$JAR" | grep -Fx 'pack.mcmeta'
+          jar tf "$JAR" | grep -Fx 'META-INF/mods.toml'
+          jar tf "$JAR" | grep -Fx 'icon.png'
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
