@@ -42,7 +42,7 @@ jobs:
       - name: Upload mod jar
         uses: actions/upload-artifact@v4
         with:
-          name: Ad-Astra-EMI-Compat-1.21.1
+          name: Ad-Astra-EMI-Compat-NeoForge-1.21.1
           path: build/libs/*.jar
           if-no-files-found: error
           retention-days: 1
