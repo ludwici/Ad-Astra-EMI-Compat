@@ -1,22 +1,35 @@
 plugins {
+    id 'eclipse'
+    id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.148'
-    id 'idea'
-}
-
-tasks.named('wrapper', Wrapper).configure {
-    distributionType = Wrapper.DistributionType.BIN
+    id 'net.minecraftforge.gradle' version '[6.0,6.2)'
 }
 
 version = project.mod_version
 group = project.mod_group_id
 
 base {
-    archivesName = "${mod_id}-${minecraft_version}"
+    archivesName = "${mod_id}-${minecraft_version}-forge"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
+
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+    copyIdeResources = true
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+            mods {
+                adastraemicompat {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
+}
 
 repositories {
     maven {
@@ -36,63 +49,37 @@ repositories {
     }
 }
 
-neoForge {
-    version = project.neo_version
-
-    parchment {
-        mappingsVersion = project.parchment_mappings_version
-        minecraftVersion = project.parchment_minecraft_version
-    }
-
-    runs {
-        client {
-            client()
-        }
-    }
-
-    mods {
-        "${mod_id}" {
-            sourceSet(sourceSets.main)
-        }
-    }
-}
-
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
-
 dependencies {
-    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    compileOnly "maven.modrinth:3ufwT9JF:9pnKHdCG"
-    compileOnly "com.teamresourceful.resourcefullib:resourcefullib-neoforge-1.21:3.0.12"
-    compileOnly "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-1.21:3.0.11"
-    compileOnly "earth.terrarium.common_storage_lib:common-storage-lib-neoforge-1.21.1:0.0.10"
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
 
-    localRuntime "dev.emi:emi-neoforge:${emi_version}"
-    localRuntime "maven.modrinth:3ufwT9JF:9pnKHdCG"
-    localRuntime "com.teamresourceful.resourcefullib:resourcefullib-neoforge-1.21:3.0.12"
-    localRuntime "com.teamresourceful.resourcefulconfig:resourcefulconfig-neoforge-1.21:3.0.11"
-    localRuntime "earth.terrarium.common_storage_lib:common-storage-lib-neoforge-1.21.1:0.0.10"
+    compileOnly fg.deobf("dev.emi:emi-forge:${emi_version}:api")
+    compileOnly fg.deobf("maven.modrinth:3ufwT9JF:8EwzHQkx")
+    compileOnly fg.deobf("earth.terrarium.botarium:botarium-forge-1.20.1:2.3.3")
+    compileOnly fg.deobf("com.teamresourceful.resourcefullib:resourcefullib-forge-1.20.1:2.1.23")
+    compileOnly fg.deobf("com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-1.20.1:2.1.2")
+
+    runtimeOnly fg.deobf("dev.emi:emi-forge:${emi_version}")
+    runtimeOnly fg.deobf("maven.modrinth:3ufwT9JF:8EwzHQkx")
+    runtimeOnly fg.deobf("earth.terrarium.botarium:botarium-forge-1.20.1:2.3.3")
+    runtimeOnly fg.deobf("com.teamresourceful.resourcefullib:resourcefullib-forge-1.20.1:2.1.23")
+    runtimeOnly fg.deobf("com.teamresourceful.resourcefulconfig:resourcefulconfig-forge-1.20.1:2.1.2")
 }
 
-var generateModMetadata = tasks.register('generateModMetadata', ProcessResources) {
-    var replaceProperties = [
-        minecraft_version_range: minecraft_version_range,
-        neo_version: neo_version,
-        loader_version_range: loader_version_range,
+tasks.named('processResources', ProcessResources).configure {
+    def props = [
         mod_id: mod_id,
         mod_name: mod_name,
         mod_license: mod_license,
         mod_version: mod_version,
+        minecraft_version_range: minecraft_version_range,
+        forge_version: forge_version,
         ad_astra_version: ad_astra_version
     ]
-    inputs.properties replaceProperties
-    expand replaceProperties
-    from 'src/main/templates'
-    into 'build/generated/sources/modMetadata'
+    inputs.properties props
+    filesMatching('META-INF/mods.toml') {
+        expand props
+    }
 }
-sourceSets.main.resources.srcDir generateModMetadata
-neoForge.ideSyncTask generateModMetadata
 
 tasks.named('jar', Jar).configure {
     from('LICENSE')
@@ -109,5 +96,5 @@ publishing {
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
-    options.release = 21
+    options.release = 17
 }

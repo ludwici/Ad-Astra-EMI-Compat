@@ -68,11 +68,11 @@ public final class ProcessingEmiRecipe implements EmiRecipe {
                 widgets.addSlot(i < inputs.size() ? inputs.get(i) : EmiStack.EMPTY, positions[i][0], positions[i][1]);
             }
         } else {
-            widgets.addSlot(inputs.getFirst(), 38, 36);
+            widgets.addSlot(inputs.get(0), 38, 36);
         }
 
         widgets.addFillingArrow(78, 36, Math.max(50, cookingTime * 50));
-        widgets.addSlot(outputs.getFirst(), 120, 36).recipeContext(this);
+        widgets.addSlot(outputs.get(0), 120, 36).recipeContext(this);
         widgets.addText(Component.translatable("emi.adastraemicompat.time", cookingTime), 7, 72, 0x777777, false);
         widgets.addText(Component.translatable("emi.adastraemicompat.energy", energy), 7, 82, 0x777777, false);
     }

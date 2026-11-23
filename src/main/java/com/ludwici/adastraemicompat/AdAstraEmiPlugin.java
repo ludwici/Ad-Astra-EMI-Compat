@@ -14,12 +14,10 @@ import earth.terrarium.adastra.common.recipes.machines.OxygenLoadingRecipe;
 import earth.terrarium.adastra.common.recipes.machines.RefiningRecipe;
 import earth.terrarium.adastra.common.registry.ModItems;
 import earth.terrarium.adastra.common.registry.ModRecipeTypes;
-import earth.terrarium.common_storage_lib.resources.ResourceStack;
-import earth.terrarium.common_storage_lib.resources.fluid.FluidResource;
-import earth.terrarium.common_storage_lib.resources.fluid.ingredient.SizedFluidIngredient;
+import earth.terrarium.botarium.common.fluid.base.FluidHolder;
+import earth.terrarium.botarium.common.fluid.utils.QuantifiedFluidIngredient;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
 import java.util.List;
@@ -44,48 +42,43 @@ public final class AdAstraEmiPlugin implements EmiPlugin {
 
         RecipeManager manager = registry.getRecipeManager();
 
-        for (RecipeHolder<NasaWorkbenchRecipe> holder : manager.getAllRecipesFor(ModRecipeTypes.NASA_WORKBENCH.get())) {
-            registry.addRecipe(new NasaWorkbenchEmiRecipe(holder.id(), holder.value(), NASA_WORKBENCH));
+        for (NasaWorkbenchRecipe recipe : manager.getAllRecipesFor(ModRecipeTypes.NASA_WORKBENCH.get())) {
+            registry.addRecipe(new NasaWorkbenchEmiRecipe(recipe.id(), recipe, NASA_WORKBENCH));
         }
 
-        for (RecipeHolder<CompressingRecipe> holder : manager.getAllRecipesFor(ModRecipeTypes.COMPRESSING.get())) {
-            CompressingRecipe recipe = holder.value();
-            registry.addRecipe(new ProcessingEmiRecipe(holder.id(), COMPRESSING,
+        for (CompressingRecipe recipe : manager.getAllRecipesFor(ModRecipeTypes.COMPRESSING.get())) {
+            registry.addRecipe(new ProcessingEmiRecipe(recipe.id(), COMPRESSING,
                 List.of(EmiIngredient.of(recipe.ingredient())), List.of(EmiStack.of(recipe.result())),
                 recipe.cookingTime(), recipe.energy(), false));
         }
 
-        for (RecipeHolder<AlloyingRecipe> holder : manager.getAllRecipesFor(ModRecipeTypes.ALLOYING.get())) {
-            AlloyingRecipe recipe = holder.value();
-            registry.addRecipe(new ProcessingEmiRecipe(holder.id(), ALLOYING,
+        for (AlloyingRecipe recipe : manager.getAllRecipesFor(ModRecipeTypes.ALLOYING.get())) {
+            registry.addRecipe(new ProcessingEmiRecipe(recipe.id(), ALLOYING,
                 recipe.ingredients().stream().map(EmiIngredient::of).toList(), List.of(EmiStack.of(recipe.result())),
                 recipe.cookingTime(), recipe.energy(), true));
         }
 
-        for (RecipeHolder<CryoFreezingRecipe> holder : manager.getAllRecipesFor(ModRecipeTypes.CRYO_FREEZING.get())) {
-            CryoFreezingRecipe recipe = holder.value();
-            registry.addRecipe(new ProcessingEmiRecipe(holder.id(), CRYO_FREEZING,
+        for (CryoFreezingRecipe recipe : manager.getAllRecipesFor(ModRecipeTypes.CRYO_FREEZING.get())) {
+            registry.addRecipe(new ProcessingEmiRecipe(recipe.id(), CRYO_FREEZING,
                 List.of(EmiIngredient.of(recipe.input())), List.of(fluid(recipe.result())),
                 recipe.cookingTime(), recipe.energy(), false));
         }
 
-        for (RecipeHolder<OxygenLoadingRecipe> holder : manager.getAllRecipesFor(ModRecipeTypes.OXYGEN_LOADING.get())) {
-            OxygenLoadingRecipe recipe = holder.value();
-            registry.addRecipe(new ProcessingEmiRecipe(holder.id(), OXYGEN_LOADING,
+        for (OxygenLoadingRecipe recipe : manager.getAllRecipesFor(ModRecipeTypes.OXYGEN_LOADING.get())) {
+            registry.addRecipe(new ProcessingEmiRecipe(recipe.id(), OXYGEN_LOADING,
                 List.of(fluidIngredient(recipe.input())), List.of(fluid(recipe.result())),
                 recipe.cookingTime(), recipe.energy(), false));
         }
 
-        for (RecipeHolder<RefiningRecipe> holder : manager.getAllRecipesFor(ModRecipeTypes.REFINING.get())) {
-            RefiningRecipe recipe = holder.value();
-            registry.addRecipe(new ProcessingEmiRecipe(holder.id(), REFINING,
+        for (RefiningRecipe recipe : manager.getAllRecipesFor(ModRecipeTypes.REFINING.get())) {
+            registry.addRecipe(new ProcessingEmiRecipe(recipe.id(), REFINING,
                 List.of(fluidIngredient(recipe.input())), List.of(fluid(recipe.result())),
                 recipe.cookingTime(), recipe.energy(), false));
         }
     }
 
     private static EmiRecipeCategory category(String name, Item workstation) {
-        return new EmiRecipeCategory(ResourceLocation.fromNamespaceAndPath("ad_astra", name), EmiStack.of(workstation));
+        return new EmiRecipeCategory(new ResourceLocation("ad_astra", name), EmiStack.of(workstation));
     }
 
     private static void workstation(EmiRegistry registry, EmiRecipeCategory category, Item item) {
@@ -93,11 +86,12 @@ public final class AdAstraEmiPlugin implements EmiPlugin {
         registry.addWorkstation(category, EmiStack.of(item));
     }
 
-    private static EmiStack fluid(ResourceStack<FluidResource> stack) {
-        return EmiStack.of(stack.resource().getType(), stack.amount());
+    private static EmiStack fluid(FluidHolder holder) {
+        return EmiStack.of(holder.getFluid(), holder.getFluidAmount());
     }
 
-    private static EmiIngredient fluidIngredient(SizedFluidIngredient ingredient) {
-        return EmiIngredient.of(ingredient.getFluids().stream().map(AdAstraEmiPlugin::fluid).toList());
+    private static EmiIngredient fluidIngredient(QuantifiedFluidIngredient ingredient) {
+        return EmiIngredient.of(ingredient.getFluids().stream()
+            .map(holder -> EmiStack.of(holder.getFluid(), ingredient.getFluidAmount())).toList());
     }
 }

@@ -68,6 +68,6 @@ public final class NasaWorkbenchEmiRecipe implements EmiRecipe {
             int[] position = INPUT_POSITIONS[i];
             widgets.addSlot(i < inputs.size() ? inputs.get(i) : EmiStack.EMPTY, position[0], position[1]);
         }
-        widgets.addSlot(outputs.getFirst(), 127, 52).recipeContext(this);
+        widgets.addSlot(outputs.get(0), 127, 52).recipeContext(this);
     }
 }

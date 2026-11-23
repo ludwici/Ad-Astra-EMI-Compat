@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="${loader_version_range}"
+loaderVersion="[47,)"
 license="${mod_license}"
 
 [[mods]]
@@ -14,29 +14,29 @@ Adds native EMI recipes for Ad Astra's machines and NASA Workbench.
 '''
 
 [[dependencies.${mod_id}]]
-modId="neoforge"
-type="required"
-versionRange="[${neo_version},)"
+modId="forge"
+mandatory=true
+versionRange="[${forge_version},)"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="minecraft"
-type="required"
+mandatory=true
 versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="BOTH"
 
 [[dependencies.${mod_id}]]
 modId="ad_astra"
-type="required"
+mandatory=true
 versionRange="[${ad_astra_version},)"
 ordering="AFTER"
 side="CLIENT"
 
 [[dependencies.${mod_id}]]
 modId="emi"
-type="required"
+mandatory=true
 versionRange="[1.1.24,)"
 ordering="AFTER"
 side="CLIENT"
