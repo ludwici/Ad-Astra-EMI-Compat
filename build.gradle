@@ -84,6 +84,7 @@ tasks.named('processResources', ProcessResources).configure {
 tasks.named('jar', Jar).configure {
     from('LICENSE')
     from('THIRD_PARTY_NOTICES.md')
+    finalizedBy 'reobfJar'
 }
 
 publishing {
